@@ -148,7 +148,7 @@ public class DbBuilder<K,V> {
    }
    
    /**
-    * Ñontrols the tradeoff between the average write speed and the durability of writes.
+    * ï¿½ontrols the tradeoff between the average write speed and the durability of writes.
     * 
     * If the choice is maximum durability (at v=0), each write instantly becomes durable (persistent),
     * but the average write speed is low. The expected speed numbers are 1000 inserts/sec for SSD and 
@@ -238,23 +238,28 @@ public class DbBuilder<K,V> {
     * @path - the file or directory path
     * @return - this
     */
-   public DbBuilder<K,V> create(String path) throws IOException {
+   public DbBuilder<K,V> create(String path) throws RuntimeIOException {
       inferDbParams();
       inferJounalParams();
-      if(type == Type.Fixed) {
-         db = journaling?
-               FixedDbUtil.createJournaled(
+      try {
+         if(type == Type.Fixed) {
+            db = journaling?
+                  FixedDbUtil.createJournaled(
+                        path, keySize, valueSize, maxListSize, align, journalDirtySize, journalMaxSize,
+                        autocommit, autoflush):
+                  FixedDbUtil.create(path, keySize, valueSize, maxListSize, align, autoflush);
+            if(hybridKey || hybridValue) db = new HybridDb(db, hybridKey, hybridValue);
+         }
+         else {
+            db = journaling?
+               VarDbUtil.createJournaled(
                      path, keySize, valueSize, maxListSize, align, journalDirtySize, journalMaxSize,
                      autocommit, autoflush):
-               FixedDbUtil.create(path, keySize, valueSize, maxListSize, align, autoflush);
-         if(hybridKey || hybridValue) db = new HybridDb(db, hybridKey, hybridValue);
+               VarDbUtil.create(path, keySize, valueSize, maxListSize, align, autoflush); 
+         }
       }
-      else {
-         db = journaling?
-            VarDbUtil.createJournaled(
-                  path, keySize, valueSize, maxListSize, align, journalDirtySize, journalMaxSize,
-                  autocommit, autoflush):
-            VarDbUtil.create(path, keySize, valueSize, maxListSize, align, autoflush); 
+      catch (IOException e) {
+         throw new RuntimeIOException(e);
       }
       if(synchronize) db = DbUtil.synchronize(db);
       return this;
@@ -266,19 +271,24 @@ public class DbBuilder<K,V> {
     * @path - the file path
     * @return - this
     */
-   public DbBuilder<K,V> open(String path) throws IOException {
+   public DbBuilder<K,V> open(String path) throws RuntimeIOException {
       inferDbParams();
       inferJounalParams();
-      if(type == Type.Fixed) {
-         db = journaling?
-               FixedDbUtil.openJournaled(path, journalDirtySize, journalMaxSize, autocommit, autoflush) :
-               FixedDbUtil.open(path, autoflush);
-         if(hybridKey || hybridValue) db = new HybridDb(db, hybridKey, hybridValue);
+      try {
+         if(type == Type.Fixed) {
+            db = journaling?
+                  FixedDbUtil.openJournaled(path, journalDirtySize, journalMaxSize, autocommit, autoflush) :
+                  FixedDbUtil.open(path, autoflush);
+            if(hybridKey || hybridValue) db = new HybridDb(db, hybridKey, hybridValue);
+         }
+         else {
+            db = journaling?
+               VarDbUtil.openJournaled(path, journalDirtySize, journalMaxSize, autocommit, autoflush) :
+               VarDbUtil.open(path, autoflush); 
+         }
       }
-      else {
-         db = journaling?
-            VarDbUtil.openJournaled(path, journalDirtySize, journalMaxSize, autocommit, autoflush) :
-            VarDbUtil.open(path, autoflush); 
+      catch (IOException e) {
+         throw new RuntimeIOException(e);
       }
       if(synchronize) db = DbUtil.synchronize(db);
       return this;
@@ -290,7 +300,7 @@ public class DbBuilder<K,V> {
     * @path - the file path
     * @return - this
     */
-   public DbBuilder<K,V> openOrCreate(String path) throws IOException {
+   public DbBuilder<K,V> openOrCreate(String path) throws RuntimeIOException {
       return new File(path).exists()? open(path): create(path);
    }
    
