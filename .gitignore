@@ -1,0 +1,7 @@
+/target/
+tmp
+attic
+docs
+.settings
+/.project
+/.classpath
