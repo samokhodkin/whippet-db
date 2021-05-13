@@ -354,7 +354,7 @@ public class DbBuilder<K,V> {
          hybridKey = hybridValue = false;
       }
       else if(
-            keyType.maxSize() != null && valueType.maxSize() != null && 
+            keyType.maxSize() != null && keyType.maxSize() < 20 && valueType.maxSize() != null && 
             MemMap.recordSize(keyType.maxSize() + 1, valueType.maxSize() + 1) <= MAX_HYBRID_SIZE) {
          type = Type.Fixed;
          hybridKey = keyType.size() == null;

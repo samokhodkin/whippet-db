@@ -208,7 +208,7 @@ public class Util {
          throw new NoSuchMethodException();
       }
       catch(Exception e){
-         throw new RuntimeException(e);
+         throw new RuntimeException("method " + methodName + "() not found in " + obj, e);
       }
    }
    

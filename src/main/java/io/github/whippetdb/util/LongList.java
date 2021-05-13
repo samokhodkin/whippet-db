@@ -101,6 +101,17 @@ public class LongList{
       size-=len-1;
    }
    
+   public void inc(int ind, long amount) {
+      extend(ind);
+      data[ind] += amount;
+   }
+   
+   public void extend(int ind) {
+      if(ind < size) return;
+      ensureCapacity(ind+1);
+      size = ind + 1;
+   }
+   
    public void sort(){
       if(size > 0) Arrays.sort(data, 0, size);
    }

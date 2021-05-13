@@ -30,7 +30,14 @@ public abstract class SimpleDirectDataIO extends DirectDataIO {
       if(cap <= oldCap) return;
       
       int newCap = (int) Math.min(Integer.MAX_VALUE, Math.max(cap, oldCap*2L + 16));
-      ByteBuffer newData = ByteBuffer.allocateDirect(newCap).order(Bytes.BYTE_ORDER);
+      
+      ByteBuffer newData;
+      try {
+         newData = ByteBuffer.allocateDirect(newCap).order(Bytes.BYTE_ORDER);
+      } catch (Exception e) {
+         throw e;
+      }
+      
       Util.copy(data, 0, newData, 0, Math.min(oldCap, size));
       data = newData;
    }

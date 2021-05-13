@@ -36,6 +36,9 @@ public class CharsIO implements TypeIO<CharSequence> {
 
    public MemArray convert(CharSequence obj, MemDataArray tmpBuf) {
       return new StringWrapper(obj);
+//      tmpBuf.write(0, obj);
+//      ((MemDataBuffer)tmpBuf).setSize(obj.length()<<1);
+//      return tmpBuf;
    }
 
    public void writeObject(CharSequence obj, MemDataArray buf) {

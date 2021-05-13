@@ -10,6 +10,7 @@ import io.github.whippetdb.memory.api.MemDataIO;
 import io.github.whippetdb.memory.api.MemDataSpace;
 import io.github.whippetdb.memory.api.MemIO;
 import io.github.whippetdb.memory.basic.*;
+import io.github.whippetdb.util.LongList;
 
 public class VarMap {
    // root record dbRootAddr(8) + dataLogPageSize(1) + hash64(dbRootAddr + dataPageSize) + dataCache(8)
@@ -141,6 +142,10 @@ public class VarMap {
             System.out.println(k + " -> " + value);
             return false;
          });
+      }
+      
+      public LongList mmStat() {
+         return parent.stat();
       }
       
       private void connectKey(VarData key) {

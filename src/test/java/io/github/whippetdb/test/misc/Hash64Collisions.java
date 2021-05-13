@@ -20,8 +20,8 @@ import io.github.whippetdb.util.Util;
 public class Hash64Collisions {
    public static void main(String[] args) throws IOException {
       //runHashMap(30_000_000L);
-      //runMemMap(50_000_000L);
-      runVarMap(20_000_000L);
+      runMemMap(50_000_000L);
+      //runVarMap(20_000_000L);
    }
    
    static void runMemMap(long numKeys) throws IOException {

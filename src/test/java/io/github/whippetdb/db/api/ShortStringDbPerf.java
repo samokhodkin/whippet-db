@@ -5,7 +5,6 @@ import java.util.Map;
 
 import io.github.whippetdb.db.api.DbBuilder;
 import io.github.whippetdb.db.api.types.CharsIO;
-import io.github.whippetdb.util.Util;
 
 public class ShortStringDbPerf {
    static final String path = "tmp/" + ShortStringDbPerf.class.getSimpleName();
@@ -14,31 +13,42 @@ public class ShortStringDbPerf {
    }
    
    public static void main(String[] args) throws Exception {
-      DbBuilder<CharSequence, CharSequence> builder = new DbBuilder<>(new CharsIO(8), new CharsIO(15));
-      long N = 15_000_000;
+      DbBuilder<CharSequence, CharSequence> builder = new DbBuilder<>(new CharsIO(8,null), new CharsIO(8,null));
+      long N = 14_000_000;
       
-      Map<CharSequence,CharSequence> map;
+      Map<CharSequence,CharSequence> db;
       long t0, dt, total = 0;
       
       //builder.synchronize(true);
       System.out.println("Creating");
-      map = builder.create().asMap();
-      System.out.println("db type:" + Util.getField(builder, "type"));
+      //builder.speedVsCapacity(0.f);
+      db = builder.create().asMap();
+      System.out.println(builder);
       
       System.out.println("Writing...");
       t0 = System.currentTimeMillis();
       for(long i = N; i --> 0;) {
-         map.put("" + i, "Value=" + i);
+         String key = ""+ i; //FastHash.hash64(i);
+         String value = ""+ i;
+         if(db.put(key, value) != null) {
+            System.out.println("key exists: " + key);
+         }
       }
       total += dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/dt) + " op/sec");
       System.out.println((builder.db().allocatedSize()/N) + " bytes/key");
+//      VarMap.Cursor vmc = (VarMap.Cursor)Util.getField(builder.db(), "val$db"); // only for var maps
+//      System.out.println("mmStat: " + vmc.mmStat());
       System.out.println();
       
       System.out.println("Reading...");
       t0 = System.currentTimeMillis();
       for(long i = N; i --> 0;) {
-         Util.assertEquals(String.valueOf(map.get("" + i)), "Value="+i);
+         String key = ""+ i; //FastHash.hash64(i);
+         String value = ""+ i;
+         if(!db.get(key).toString().equals(value)) {
+            System.out.println("incorrect or missing value: " + key + " -> " + db.get(key) + " instead of " + value);
+         }
       }
       total += dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/dt) + " op/sec");
@@ -47,7 +57,11 @@ public class ShortStringDbPerf {
       System.out.println("Deleting...");
       t0 = System.currentTimeMillis();
       for(long i = N; i --> 0;) {
-         Util.assertEquals(String.valueOf(map.remove("" + i)), "Value="+i);
+         String key = ""+ i; //FastHash.hash64(i);
+         String value = ""+ i;
+         if(!db.remove(key).toString().equals(value)) {
+            System.out.println("incorrect or missing value: " + key + " -> " + db.get(key) + " instead of " + value);
+         }
       }
       total += dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/dt) + " op/sec");
@@ -57,7 +71,11 @@ public class ShortStringDbPerf {
       System.out.println("Writing...");
       t0 = System.currentTimeMillis();
       for(long i = N; i --> 0;) {
-         map.put("" + i, "Value=" + i);
+         String key = ""+ i; //FastHash.hash64(i);
+         String value = ""+ i;
+         if(db.put(key, value) != null) {
+            System.out.println("key exists: " + key);
+         }
       }
       total += dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/dt) + " op/sec");

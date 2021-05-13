@@ -8,6 +8,7 @@ import io.github.whippetdb.memory.api.MemDataArray;
 import io.github.whippetdb.memory.api.MemDataSpace;
 import io.github.whippetdb.memory.api.MemIO;
 import io.github.whippetdb.memory.basic.ProxyDataArray;
+import io.github.whippetdb.util.LongList;
 import io.github.whippetdb.util.Util;
 
 public class MemMap{
@@ -435,6 +436,38 @@ public class MemMap{
             sb.append("\n--------\n");
          }
          return sb.toString();
+      }
+      
+      // result = [num tables, num lists, num records, num records(level=0), num records(level=1), ...]
+      public LongList stat() {
+         LongList stat = new LongList();
+         stat(entryAddr, stat, 0);
+         return stat;
+      }
+      
+      private void stat(long addr, LongList stat, int level){
+         if(addr==NULL) return;
+         int type=ms.readByte(addr+TYPE_OFF);
+         switch(type){
+            case TYPE_DATA:{
+               stat.inc(1, 1);
+               do{
+                  stat.inc(2, 1);
+                  stat.inc(3 + level, 1);
+                  addr=ms.readLong(addr+NEXT_ADDR_OFF);
+               }
+               while(addr!=NULL);
+               return;
+            }
+            case TYPE_TABLE:
+               stat.inc(0, 1);
+               for(int i=0;i<256;i++){
+                  long ref=ms.readLong(addr+TABLE_OFF+i*ADDR_SIZE);
+                  if(ref!=0){
+                     stat(ref, stat, level + 1);
+                  }
+               }
+         }
       }
       
       private String blockToString(long addr, boolean recurse){
