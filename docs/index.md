@@ -1,37 +1,38 @@
-## Welcome to GitHub Pages
+# Whippet-db
 
-You can use the [editor on GitHub](https://github.com/samokhodkin/whippet-db/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+An embedded key-value store for Java.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Overview
 
-### Markdown
+Whippet-db is a fast embedded local key-value store for Java, either in-memory or persistent - of your choice. The library is extremally low-footprint - less then 150 kb, with no dependencies, and is very simple to use. It is written in pure classic Java 1.8 with no use of Unsafe or native methods, so there are no problems with transition to newer Java versions.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Applications
 
-```markdown
-Syntax highlighted code block
+* as a general data index or a cache
+* as a persistent and sometimes more capable drop-in replacement for a java.util.Map
+* in journaling mode Whippet makes an ideal configuration/properties storage
 
-# Header 1
-## Header 2
-### Header 3
+## Features
 
-- Bulleted
-- List
+* **Performance.** Despite its small size and pure-Java nature, Whippet is impressively fast, rivaling the fastest known KV stores. In non-journaling mode its CRUD speed range  is 1-7M op/sec for small objects, while in the journaling mode over an SSD the write speed is about 150-250K op/sec.
 
-1. Numbered
-2. List
+* **Journaling mode** makes Whippet to keep the updates atomic, so the integrity of a database doesn't suffer from a sudden power outage. By default the updates are eventually durable. This means that in the case of an application failure all updates remain intact, while in the case of a system or hardware failure a number of the very recent updates may be lost. You may also opt for instant durability, at the cost of much lower speed.
 
-**Bold** and _Italic_ and `Code` text
+* **The user API of Whippet is as easy as it gets.** The [DbBuilder](https://samokhodkin.github.io/whippet-db/api/io/github/whippetdb/db/api/DbBuilder.html) class is used to do some customisations and to open/create the store, while the database itself is represented as  `java.util.Map`. Some data types are supported out of the box, but for the less common types you need to implement the [TypeIO](https://samokhodkin.github.io/whippet-db/api/io/github/whippetdb/db/api/TypeIO.html) interface. There is also a more advanced internal [interface](https://samokhodkin.github.io/whippet-db/api/io/github/whippetdb/db/api/Db.html) to the database.
 
-[Link](url) and ![Image](src)
-```
+* **The thread safety** is currently implemented via an optional coarse-grained synchronization with one lock per whole database.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Setup
 
-### Jekyll Themes
+Maven dependency
+````
+not yet available
+````
+or [download the jar](https://github.com/samokhodkin/whippet-db/releases)
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/samokhodkin/whippet-db/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Documentation
 
-### Support or Contact
+See [API doc](https://samokhodkin.github.io/whippet-db/api/)
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+## Code samples
+
