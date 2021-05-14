@@ -10,7 +10,7 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 * as a general data index or a cache
 * as a persistent and sometimes more capable drop-in replacement for a java.util.Map
-* in journaling mode Whippet makes an ideal configuration/properties storage
+* in journaling mode Whippet makes an ideal application configuration/properties store
 
 ## Features
 
