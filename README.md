@@ -22,7 +22,7 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 * **In-place value modification** is possible using the internal API
 
-* **The thread safety** is currently implemented via an optional coarse-grained synchronization with one lock per whole database.
+* **Thread safety** is currently implemented via an optional coarse-grained synchronization with one lock per whole database.
 
 ## Setup
 
