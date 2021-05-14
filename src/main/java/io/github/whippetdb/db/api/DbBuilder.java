@@ -317,7 +317,7 @@ public class DbBuilder<K,V> {
    }
    
    /**
-    * Return the actual interface to the database.
+    * Return raw interface to the database.
     * Provides access to lifecycle methods (e.g. close()) and
     * advanced data access methods.
     * @see io.github.whippetdb.db.api.Db
