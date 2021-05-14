@@ -41,7 +41,7 @@ public class Hash64Collisions {
             System.out.println("collision: " + db.value.readLong(0) + ", " + i + " -> " + k);
          }
          db.value.writeLong(0, i);
-         if((i&0x3fffff)==0) System.out.printf("%16d  %16d  %16d\n", i, ms.allocatedSize(), System.currentTimeMillis()-t0);
+         //if((i&0x3fffff)==0) System.out.printf("%16d  %16d  %16d\n", i, ms.allocatedSize(), System.currentTimeMillis()-t0);
       }
       long dt = System.currentTimeMillis()-t0;
       System.out.println((numKeys*1000f/dt) + " op/sec");
@@ -56,7 +56,7 @@ public class Hash64Collisions {
             System.out.println("Warning: missing key: " + k);
          }
          Util.assertEquals(db.value.readLong(0) == i, true);
-         if((i&0x3fffff)==0) System.out.printf("%16d  %16d\n", i, System.currentTimeMillis()-t0);
+         //if((i&0x3fffff)==0) System.out.printf("%16d  %16d\n", i, System.currentTimeMillis()-t0);
       }
       dt = System.currentTimeMillis()-t0;
       System.out.println((numKeys*1000f/dt) + " op/sec");
@@ -74,7 +74,7 @@ public class Hash64Collisions {
          if(db.put(k, i) != null) {
             System.out.println("collision: " + db.get(k) + ", " + i + " -> " + k);
          }
-         if((i&0xfffff)==0) System.out.printf("%16d  %16d  %16d\n", i, runtime.totalMemory()-runtime.freeMemory()-usedMemory0, System.currentTimeMillis()-t0);
+         //if((i&0xfffff)==0) System.out.printf("%16d  %16d  %16d\n", i, runtime.totalMemory()-runtime.freeMemory()-usedMemory0, System.currentTimeMillis()-t0);
       }
       dt = System.currentTimeMillis()-t0;
       System.out.println((numKeys*1000f/dt) + " op/sec");

@@ -41,7 +41,8 @@ public class FastHashProblem {
 //      System.out.println("hash64(i): " + Arrays.toString(stat(N, 64, i -> FastHash.hash64(i))));
 //      System.out.println("fnv(i): " + Arrays.toString(stat(N, 64, i -> fnv(i))));
       
-      System.out.println("hash64(hash64(i)): " + Arrays.toString(stat(N, 64, i -> FastHash.hash64(FastHash.hash64(i)))));
+      //System.out.println("hash64(hash64(i)): " + Arrays.toString(stat(N, 64, i -> FastHash.hash64(FastHash.hash64(i)))));
+      System.out.println("hash64(i*hash64(i)): " + Arrays.toString(stat(N, 64, i -> FastHash.hash64(i*FastHash.hash64(i)))));
       
 //      System.out.println("hash64(''+i): " + Arrays.toString(stat(N, 64, i -> hash64(""+i))));
 //      System.out.println("fnv(''+i): " + Arrays.toString(stat(N, 64, i -> fnv(""+i))));

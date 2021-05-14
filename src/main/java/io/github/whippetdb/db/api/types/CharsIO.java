@@ -3,6 +3,7 @@ package io.github.whippetdb.db.api.types;
 import io.github.whippetdb.db.api.TypeIO;
 import io.github.whippetdb.memory.api.MemArray;
 import io.github.whippetdb.memory.api.MemDataArray;
+import io.github.whippetdb.memory.api.MemDataBuffer;
 import io.github.whippetdb.memory.basic.StringWrapper;
 
 public class CharsIO implements TypeIO<CharSequence> {
@@ -35,10 +36,10 @@ public class CharsIO implements TypeIO<CharSequence> {
    }
 
    public MemArray convert(CharSequence obj, MemDataArray tmpBuf) {
-      return new StringWrapper(obj);
-//      tmpBuf.write(0, obj);
-//      ((MemDataBuffer)tmpBuf).setSize(obj.length()<<1);
-//      return tmpBuf;
+      if(obj.length() <= 8) return new StringWrapper(obj);
+      tmpBuf.write(0, obj);
+      ((MemDataBuffer)tmpBuf).setSize(obj.length()<<1);
+      return tmpBuf;
    }
 
    public void writeObject(CharSequence obj, MemDataArray buf) {
