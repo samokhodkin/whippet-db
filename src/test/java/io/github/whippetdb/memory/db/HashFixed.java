@@ -92,17 +92,22 @@ public class HashFixed {
       
       MemDataSpace ms = new SimpleDirectDataSpace();
       //MemDataSpace ms = new SimpleFileDataSpace("tmp", 0);
+      
       MemMap.Cursor db = new MemMap(ms, 8, 32, 10).new Cursor(ms);
+      //try new design
+      //MemMap.Cursor db = new MemMap(ms, 8, 16, 10).new Cursor(ms);
+      
       MemDataBuffer mmKey = new SimpleDirectDataBuffer(8);
       
       System.out.println("Writing..");
       long keyCacheAddr = ms.allocate(8, true);
       long valueCacheAddr = ms.allocate(8, true);
+      
       VarData valueData = new VarData(ms, valueCacheAddr, 20);
+      // new design: key + value in one vardata
+      //VarData valueData = new VarData(ms, valueCacheAddr, 40 + 20);
+      
       t0 = System.currentTimeMillis();
-      final int keyPageSize = 40;
-      //MemDataArray key = new StringWrapper("01234567890123456789");
-      //MemDataArray key = new SimpleHeapDataBuffer(new byte[40]);
       MemDataBuffer key = new SimpleDirectDataBuffer();
       key.write(0, "01234567890123456789");
       for(int i = N; i --> 0;) {
@@ -118,10 +123,18 @@ public class HashFixed {
          // mimic VarMap
          long mmValueAddr = db.currentAddr + MemMap.KEY_OFF + 8;
          ms.fillLong(mmValueAddr + 0, 32, 0);
-         VarData.create(ms, mmValueAddr, keyCacheAddr, keyPageSize, key, 0, s.length()<<1);
+         VarData.create(ms, mmValueAddr, keyCacheAddr, 40, key, 0, s.length()<<1);
          ms.writeLong(mmValueAddr + 8, key.size());
          valueData.connect(mmValueAddr + 16, mmValueAddr + 24);
          valueData.write(0, "" + i);
+         
+         // new VarMap design
+//         long mmValueAddr = db.currentAddr + MemMap.KEY_OFF + 8;
+//         ms.fillLong(mmValueAddr + 0, 16, 0);
+//         valueData.connect(mmValueAddr, mmValueAddr + 8);
+//         valueData.write(0, key, 0, (int)key.size());
+//         String v = "" + i;
+//         valueData.write((int)key.size(), v);
       }
       dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/(dt + keysDt)) +  " op/sec total");
@@ -146,9 +159,13 @@ public class HashFixed {
          
          // mimic VarMap
          long mmValueAddr = db.currentAddr + MemMap.KEY_OFF + 8;
-         if(!VarData.equals(ms, mmValueAddr, keyPageSize, key, 0, s.length()<<1)) throw new Error("bad stored key at "+i);
-         valueData.connect(mmValueAddr + 16, mmValueAddr + 24);
-         if(!valueData.readString(0).toString().equals("" + i)) throw new Error("bad value at " + i);
+         if(!VarData.equals(ms, mmValueAddr, 40, key, 0, s.length()<<1)) throw new Error("bad stored key at "+i);
+         //?? connect value
+         //if(!valueData.readString(0).toString().equals("" + i)) throw new Error("bad value at " + i);
+         //new design
+//         if(!VarData.equals(ms, mmValueAddr + 8, 40+20, key, 0, (int)key.size())) throw new Error("bad stored key at "+i);
+         //?? connect value
+         //if(!valueData.readString(0).toString().equals("" + i)) throw new Error("bad value at " + i);
       }
       dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/(dt + keysDt)) +  " op/sec total");
