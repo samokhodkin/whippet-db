@@ -5,5 +5,4 @@ io.github.whippetdb.memory.api
 io.github.whippetdb.memory.basic
 io.github.whippetdb.memory.db
 io.github.whippetdb.memory.journaling.simple
-io.github.whippetdb.test.misc
 io.github.whippetdb.util
