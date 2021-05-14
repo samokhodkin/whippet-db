@@ -20,6 +20,8 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 * **The user API of Whippet is as easy as it gets.** The [DbBuilder](https://samokhodkin.github.io/whippet-db/api/io/github/whippetdb/db/api/DbBuilder.html) class is used to do some customisations and to open/create the store, while the database itself is represented as  `java.util.Map`. [Some data types](https://samokhodkin.github.io/whippet-db/api/io/github/whippetdb/db/api/types/package-summary.html) are supported out of the box, but for the less common types you need to implement the [TypeIO](https://samokhodkin.github.io/whippet-db/api/io/github/whippetdb/db/api/TypeIO.html) interface. There is also a more advanced internal [interface](https://samokhodkin.github.io/whippet-db/api/io/github/whippetdb/db/api/Db.html) to the database.
 
+* **In-place value modification** is possible using the internal API
+
 * **The thread safety** is currently implemented via an optional coarse-grained synchronization with one lock per whole database.
 
 ## Setup
