@@ -148,7 +148,7 @@ public class DbBuilder<K,V> {
    }
    
    /**
-    * �ontrols the tradeoff between the average write speed and the durability of writes.
+    * Controls the tradeoff between the average write speed and the durability of writes.
     * 
     * If the choice is maximum durability (at v=0), each write instantly becomes durable (persistent),
     * but the average write speed is low. The expected speed numbers are 1000 inserts/sec for SSD and 
