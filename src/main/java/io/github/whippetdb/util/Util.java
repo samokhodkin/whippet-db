@@ -142,11 +142,11 @@ public class Util {
       if(v == 0) throw new IllegalArgumentException("Parameter " + name + " is zero");
    }
    
-   public static void assertEquals(Object a, Object b, String... msg) {
+   public static void assertEquals(Object a, Object b, Object... msg) {
       if(!Objects.equals(a, b)) throw new AssertionError((msg.length > 0? msg[0] + ": ": "") + a + " != " + b);
    }
    
-   public static void assertNotEquals(Object a, Object b, String... msg) {
+   public static void assertNotEquals(Object a, Object b, Object... msg) {
       if(Objects.equals(a, b)) throw new AssertionError((msg.length > 0? msg[0] + ": ": "") + a + " == " + b);
    }
    

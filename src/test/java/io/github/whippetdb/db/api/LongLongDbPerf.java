@@ -11,7 +11,6 @@ import io.github.whippetdb.memory.api.MemDataBuffer;
 import io.github.whippetdb.memory.basic.SimpleDirectDataBuffer;
 import io.github.whippetdb.memory.db.MemMap;
 import io.github.whippetdb.memory.db.MemMap.Cursor;
-import io.github.whippetdb.util.FastHash;
 import io.github.whippetdb.util.Util;
 
 public class LongLongDbPerf {
@@ -26,11 +25,11 @@ public class LongLongDbPerf {
    static void runWdb() throws Exception {
       new File("tmp").mkdir();
       long t0, dt, total = 0;
-      long N = 46_000_000;
+      long N = 40_000_000;
       
       DbBuilder<Long, Long> builder = new DbBuilder<>(new LongIO(), new LongIO());
       builder.synchronize(true);
-      builder.speedVsCapacity(0.7f);
+      builder.speedVsCapacity(0.4f);
       builder.create();
       //builder.create("tmp");
       System.out.println("builder="+builder);
@@ -63,9 +62,7 @@ public class LongLongDbPerf {
       for(long i = 0; i < N; i++) {
          Long k = key(i);
          Long v = value(i);
-         if(!map.get(k).equals(v)) {
-            System.out.println("incorrect or missing value: " + k + " -> " + map.get(k) + " instead of " + v);
-         }
+         Util.assertEquals(map.get(k), v);
       }
       total += dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/dt) + " op/sec");
@@ -175,9 +172,11 @@ public class LongLongDbPerf {
    static Random random = new Random();
    
    static Long key(long i) {
+      return i;
 //      return FastHash.hash64(i); // non-randomized keys
-      return FastHash.fnb64(i*FastHash.fnb64(i*i)); // moderately random keys
-//      String s = "" + FastHash.hash64(i);
+//      return FastHash.fnb64(i*FastHash.fnb64(i*i)); // moderately random keys
+//      return FastHash.hash64(i^FastHash.hash64(i^FastHash.hash64(i^FastHash.hash64(i)))); // strongly random
+//    String s = "" + FastHash.hash64(i);
 //      keybuf.write(0, s);
 //      return FastHash.hash64(keybuf, 0, s.length()<<1);
 //      return random.nextLong();
