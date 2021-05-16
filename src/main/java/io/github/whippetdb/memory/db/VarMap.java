@@ -83,7 +83,7 @@ public class VarMap {
       }
       
       public boolean seek(MemIO key, long off, int len) {
-         hash.writeLong(0, hash64(key, off, len));
+         hash.writeLong(0, fnb64(key, off, len));
          if(!parent.seek(hash, 0)) return false;
          do{
             if(checkKey(key, off, len)){
@@ -100,7 +100,7 @@ public class VarMap {
       }
       
       public boolean put(MemIO key, long off, int len) {
-         hash.writeLong(0, hash64(key, off, len));
+         hash.writeLong(0, fnb64(key, off, len));
          if(!parent.put(hash, 0)) { // hash exists
             do {
                if(checkKey(key, off, len)){

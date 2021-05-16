@@ -11,7 +11,7 @@ import io.github.whippetdb.memory.basic.ProxyDataArray;
 import io.github.whippetdb.util.LongList;
 import io.github.whippetdb.util.Util;
 
-public class MemMap{
+public class MemMap8{
    static final int LOG_ADDR_SIZE = 3;
    static final int ADDR_SIZE = 8;
    static final long NULL = 0L;
@@ -61,7 +61,7 @@ public class MemMap{
    private int size=0;
    
    //create new db in ms
-   public MemMap(MemDataSpace ms, int keySize, int valueSize, int maxListSize){
+   public MemMap8(MemDataSpace ms, int keySize, int valueSize, int maxListSize){
       baseAddr=ms.allocate(BASE_BLOCK_SIZE, true);
       tableCacheAddr=baseAddr+TABLE_CACHE_OFF;
       dataCacheAddr=baseAddr+DATA_CACHE_OFF;
@@ -79,7 +79,7 @@ public class MemMap{
    }
    
    //load existing db
-   public MemMap(MemDataSpace ms, long baseAddr){
+   public MemMap8(MemDataSpace ms, long baseAddr){
       this.baseAddr=baseAddr;
       tableCacheAddr=baseAddr+TABLE_CACHE_OFF;
       dataCacheAddr=baseAddr+DATA_CACHE_OFF;

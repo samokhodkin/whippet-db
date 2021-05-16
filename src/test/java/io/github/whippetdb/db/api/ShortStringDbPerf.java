@@ -5,13 +5,12 @@ import java.util.Map;
 import io.github.whippetdb.db.api.DbBuilder;
 import io.github.whippetdb.db.api.types.CharsIO;
 import io.github.whippetdb.memory.db.VarMap;
-import io.github.whippetdb.util.FastHash;
 import io.github.whippetdb.util.Util;
 
 public class ShortStringDbPerf {
    static String key(long i) {
-      //return "" + i;
-      return "" + FastHash.hash64(i);
+      return "" + i;
+      //return "" + FastHash.hash64(i);
    }
    
    static String value(long i) {
@@ -20,7 +19,7 @@ public class ShortStringDbPerf {
    
    public static void main(String[] args) throws Exception {
       DbBuilder<CharSequence, CharSequence> builder = new DbBuilder<>(new CharsIO(20,null), new CharsIO(10,null));
-      long N = 14_000_000;
+      long N = 10_000_000;
       
       Map<CharSequence,CharSequence> db;
       long t0, dt, total = 0;

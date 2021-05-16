@@ -43,5 +43,23 @@ public class FastHashTest {
       Util.assertEquals(hash64(str,0,8), hash64(str.readLong(0)));
       Util.assertEquals(hash64(str,5,8), hash64(str.readLong(5)));
       Util.assertNotEquals(hash64(str,5,8), hash64(str.readLong(6)));
+      
+      /* fnb */
+      
+      Util.assertEquals(fnb64(str1,0,(int)str1.size()), fnb64(mem,addr,(int)str1.size()));
+      
+      Util.assertEquals(fnb64(str,0,10), fnb64(str,14,10));
+      Util.assertEquals(fnb64(str,0,4), fnb64(str,10,4));
+      Util.assertEquals(fnb64(str,1,9), fnb64(str,15,9));
+      Util.assertEquals(fnb64(str,1,9), fnb64(str1,15,9));
+      
+      Util.assertNotEquals(fnb64(str,0,10), fnb64(str,1,10));
+      Util.assertNotEquals(fnb64(str,0,10), fnb64(str,2,10));
+      Util.assertNotEquals(fnb64(str,0,10), fnb64(str,3,10));
+      Util.assertNotEquals(fnb64(str,0,10), fnb64(str,4,10));
+      
+      Util.assertEquals(fnb64(str,0,8), fnb64(str.readLong(0)));
+      Util.assertEquals(fnb64(str,5,8), fnb64(str.readLong(5)));
+      Util.assertNotEquals(fnb64(str,5,8), fnb64(str.readLong(6)));
    }
 }

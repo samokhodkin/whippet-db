@@ -410,7 +410,8 @@ public class DbBuilder<K,V> {
       // empirical formula, 0 -> 4, 0.5 -> 11, 1 -> 22
       // maxListSize=10 should be avoided as hell! The reason is that for decimal strings,
       // which are quite common data type, the maxListSize=10 causes capacity disaster 
-      if(maxListSize == 0) maxListSize = (int)Math.round(4 + 18 * Math.pow(speedVsCapacity, 1.41));
+      // if(maxListSize == 0) maxListSize = (int)Math.round(4 + 18 * Math.pow(speedVsCapacity, 1.41));
+      if(maxListSize == 0) maxListSize = (int)Math.round(2 + 8 * Math.pow(speedVsCapacity, 2));
    }
    
    private int adviceDataPageSize(TypeIO<?> type) {

@@ -2,14 +2,23 @@ package io.github.whippetdb.test.misc;
 
 import java.util.Random;
 
+import io.github.whippetdb.util.FastHash;
+
 public class MemTest {
+   static Random r = new Random();
+   
+   /**
+    * measure speed of non-cached reads
+    */
    public static void main(String[] args) throws Exception {
       int size = 128 << 20;
       int mask = size - 1;
       long[] keys = new long[size];
-      Random r = new Random();
+      
+      
       for(int i = 0 ; i  < keys.length; i++) {
-         keys[i] = r.nextLong();
+         keys[i] = FastHash.hash64(i);
+         //keys[i] = r.nextLong();
       }
       
       long t0, dt;

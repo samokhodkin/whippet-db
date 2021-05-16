@@ -55,7 +55,7 @@ public class JournalingMemMapPerf {
          }
       };
       
-      db = new MemMap(ms, 8, 8, 10).new Cursor(ms);
+      db = new MemMap(ms, 8, 8, 4).new Cursor(ms);
       
       runWrites(10_000_000);
       //runReads(10_000_000);

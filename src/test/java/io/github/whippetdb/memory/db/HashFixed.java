@@ -2,7 +2,10 @@ package io.github.whippetdb.memory.db;
 
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import io.github.whippetdb.memory.api.Bytes;
 import io.github.whippetdb.memory.api.MemDataBuffer;
@@ -11,9 +14,7 @@ import io.github.whippetdb.memory.api.MemDataSpace;
 import io.github.whippetdb.memory.basic.SimpleDirectDataBuffer;
 import io.github.whippetdb.memory.basic.SimpleDirectDataSpace;
 import io.github.whippetdb.memory.basic.StringWrapper;
-import io.github.whippetdb.util.LongList;
-
-import static io.github.whippetdb.util.FastHash.*;
+import io.github.whippetdb.util.FastHash;
 
 public class HashFixed {
    static long fnv(String s) {
@@ -53,8 +54,8 @@ public class HashFixed {
       return Bytes.readLong(hash, 0);
    }
    
-   static int N = 10_000_000;
-   static long[] keys = new long[N];
+   static int N = 50_000_000;
+   static long[] keys;// = new long[N];
    
    @SuppressWarnings("unused")
    public static void main(String[] args) throws Exception {
@@ -71,8 +72,10 @@ public class HashFixed {
          //keys[i] = md(md, "" + hash64(i));
          
          //keys[i] = hash64(i);
+         //keys[i] = hash64(i*i);
          //keys[i] = hash64(hash64(i));
          //keys[i] = hash64(i*hash64(i));
+         //keys[i] = hash64(i*hash64(i*i));
          //keys[i] = hash64(new StringWrapper("" + i));
          //keys[i] = hash64(new StringWrapper("" + hash64(i)));
          
@@ -93,82 +96,162 @@ public class HashFixed {
       MemDataSpace ms = new SimpleDirectDataSpace();
       //MemDataSpace ms = new SimpleFileDataSpace("tmp", 0);
       
-      MemMap.Cursor db = new MemMap(ms, 8, 32, 10).new Cursor(ms);
-      //try new design
-      //MemMap.Cursor db = new MemMap(ms, 8, 16, 10).new Cursor(ms);
+      //MemMap.Cursor db = new MemMap(ms, 8, 8, 20).new Cursor(ms);
+      MemMap.Cursor db = new MemMap(ms, 8, 8, 4).new Cursor(ms);
       
       MemDataBuffer mmKey = new SimpleDirectDataBuffer(8);
       
+      Map<Long,Long> map = new Map<Long,Long>() {
+         private MemDataBuffer mmKey = new SimpleDirectDataBuffer(8);
+         private MemMap.Cursor db = new MemMap(ms, 8, 8, 11).new Cursor(ms);
+         
+         public int size() {
+            return db.size();
+         }
+
+         @Override
+         public boolean isEmpty() {
+            boolean[] empty = new boolean[]{true};
+            db.scan(()->{
+               empty[0]=false;
+               return true;
+            });
+            return empty[0];
+         }
+
+         @Override
+         public boolean containsKey(Object key) {
+            if(!(key instanceof Long)) return false;
+            mmKey.writeLong(0, ((Long)key).longValue());
+            return db.seek(mmKey, 0);
+         }
+
+         @Override
+         public boolean containsValue(Object value) {
+            if(!(value instanceof Long)) return false;
+            long v = ((Long)value).longValue();
+            boolean[] contains = new boolean[]{false};
+            db.scan(()->{
+               if(db.key.readLong(0) == v) {
+                  return contains[0] = true;
+               }
+               return false;
+            });
+            return contains[0];
+         }
+
+         @Override
+         public Long get(Object key) {
+            long k = ((Long)key).longValue();
+            mmKey.writeLong(0, k);
+            return db.seek(mmKey, 0)? db.value.readLong(0): null;
+         }
+
+         @Override
+         public Long put(Long key, Long value) {
+            mmKey.writeLong(0, key);
+            Long old = null;
+            if(!db.put(mmKey, 0))  old = db.value.readLong(0);
+            db.value.writeLong(0, value);
+            return old;
+         }
+
+         @Override
+         public Long remove(Object key) {
+            long k = ((Long)key).longValue();
+            mmKey.writeLong(0, k);
+            if(!db.seek(mmKey, 0)) return null;
+            Long old = db.value.readLong(0);
+            db.delete();
+            return old;
+         }
+
+         @Override
+         public void putAll(Map<? extends Long, ? extends Long> m) {
+            // TODO Auto-generated method stub
+            
+         }
+
+         @Override
+         public void clear() {
+            // TODO Auto-generated method stub
+            
+         }
+
+         @Override
+         public Set<Long> keySet() {
+            // TODO Auto-generated method stub
+            return null;
+         }
+
+         @Override
+         public Collection<Long> values() {
+            // TODO Auto-generated method stub
+            return null;
+         }
+
+         @Override
+         public Set<java.util.Map.Entry<Long, Long>> entrySet() {
+            // TODO Auto-generated method stub
+            return null;
+         }
+      };
+      
       System.out.println("Writing..");
-      long keyCacheAddr = ms.allocate(8, true);
-      long valueCacheAddr = ms.allocate(8, true);
-      
-      VarData valueData = new VarData(ms, valueCacheAddr, 20);
-      // new design: key + value in one vardata
-      //VarData valueData = new VarData(ms, valueCacheAddr, 40 + 20);
-      
       t0 = System.currentTimeMillis();
-      MemDataBuffer key = new SimpleDirectDataBuffer();
-      key.write(0, "01234567890123456789");
-      for(int i = N; i --> 0;) {
-         //long k = keys[i];
-         String s = "" + hash64(i);
-         //key.setSize(0);
-         key.write(0, s);
-         key.setSize(s.length()<<1);
-         long k = hash64(key);
-         mmKey.writeLong(0, k);
-         if(!db.put(mmKey, 0)) throw new Error(i + ":" + k);
+      for(int i = 0; i < N; i++) {
+         Long key = key(i);
+         Long value = value(i);
          
-         // mimic VarMap
-         long mmValueAddr = db.currentAddr + MemMap.KEY_OFF + 8;
-         ms.fillLong(mmValueAddr + 0, 32, 0);
-         VarData.create(ms, mmValueAddr, keyCacheAddr, 40, key, 0, s.length()<<1);
-         ms.writeLong(mmValueAddr + 8, key.size());
-         valueData.connect(mmValueAddr + 16, mmValueAddr + 24);
-         valueData.write(0, "" + i);
+         mmKey.writeLong(0, key);
+         if(!db.put(mmKey, 0)) throw new Error(i + ":" + key + ", clash with i=" + db.value.readLong(0));
+         db.value.writeLong(0, new Long(i));
+         // num keys, allocated, actually used, time
+         if((i & 0x1fffff)==0) System.out.printf("%16d  %16d  %16d  %16d\n", i, ms.allocatedSize(), ms.allocatedSize(), System.currentTimeMillis()-t0);
          
-         // new VarMap design
-//         long mmValueAddr = db.currentAddr + MemMap.KEY_OFF + 8;
-//         ms.fillLong(mmValueAddr + 0, 16, 0);
-//         valueData.connect(mmValueAddr, mmValueAddr + 8);
-//         valueData.write(0, key, 0, (int)key.size());
-//         String v = "" + i;
-//         valueData.write((int)key.size(), v);
+//         if(map.put(key, value) != null) throw new Error(i + ": key=" + key);
       }
       dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/(dt + keysDt)) +  " op/sec total");
       System.out.println((N*1000f/dt) +  " op/sec without key generation");
       System.out.println((N*1000f/keysDt) +  " op/sec key generation alone");
-      LongList stat = db.stat();
-      System.out.println("stat=" + stat);
-      System.out.println("avg " + (stat.get(2)*1f/stat.get(1)) + " records in list");
+//      LongList stat = db.stat();
+//      System.out.println("stat=" + stat);
+//      System.out.println("avg " + (stat.get(2)*1f/stat.get(1)) + " records in list");
       System.out.println((ms.allocatedSize() / N) + " bytes/key");
+      System.exit(0);
       
       
       System.out.println("Reading..");
       t0 = System.currentTimeMillis();
-      for(int i = N; i --> 0;) {
-         //long k = keys[i];
-         String s = "" + hash64(i);
-         key.setSize(0);
-         key.write(0, s);
-         long k = hash64(key);
+      for(int i = 0; i < N; i++) {
+         long k = keys[i];
+//         String s = "" + hash64(i);
+//         key.setSize(0);
+//         key.write(0, s);
+//         long k = hash64(key);
+
          mmKey.writeLong(0, k);
          if(!db.seek(mmKey, 0)) throw new Error(i + ":" + k);
-         
-         // mimic VarMap
-         long mmValueAddr = db.currentAddr + MemMap.KEY_OFF + 8;
-         if(!VarData.equals(ms, mmValueAddr, 40, key, 0, s.length()<<1)) throw new Error("bad stored key at "+i);
-         //?? connect value
-         //if(!valueData.readString(0).toString().equals("" + i)) throw new Error("bad value at " + i);
-         //new design
-//         if(!VarData.equals(ms, mmValueAddr + 8, 40+20, key, 0, (int)key.size())) throw new Error("bad stored key at "+i);
-         //?? connect value
-         //if(!valueData.readString(0).toString().equals("" + i)) throw new Error("bad value at " + i);
       }
       dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/(dt + keysDt)) +  " op/sec total");
       System.out.println((N*1000f/dt) +  " op/sec without key generation");
+   }
+   
+   static MemDataBuffer keybuf = new SimpleDirectDataBuffer();
+   static Random randon = new Random();
+   
+   static Long key(long i) {
+//      return FastHash.hash64(i); // less random keys
+      return FastHash.fnb64(i*FastHash.fnb64(i*i)); // highly random keys
+//      String s = "" + FastHash.hash64(i);
+//      keybuf.write(0, s);
+//      return FastHash.hash64(keybuf, 0, s.length()<<1);
+//      return randon.nextLong();
+   }
+   
+   static Long value(long i) {
+      return i;
    }
 }
