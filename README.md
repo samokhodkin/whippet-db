@@ -50,6 +50,35 @@ See the [API doc](https://samokhodkin.github.io/whippet-db/api/)
 
 ## Code samples
 
+````
+import io.github.whippetdb.db.api.DbBuilder;
+import io.github.whippetdb.db.api.types.LongIO;
+import io.github.whippetdb.db.api.types.CharsIO;
+
+...
+
+// in-memory Long:Long map
+static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO()).create().asMap();
+
+// on-disk, synchronized Long:Long map
+static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO())
+	.synchronize(true)
+	.create("path/to/file").asMap();
+
+// journaling on-disk synchronized Long:Long map
+static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO())
+	.journaling(true)
+	.synchronize(true)
+	.create("path/to/file").asMap();
+
+// journaling on-disk synchronized CharSequence:CharSequence map;
+// for better performance provide expected average key and value sizes
+static Map<CharSequence,CharSequence>  = new DbBuilder(new CharsIO(20,null), new CharsIO(50,null))
+	.journaling(true)
+	.synchronize(true)
+	.create("path/to/file").asMap();
+
+````
 
 ## Performance
 
@@ -58,12 +87,24 @@ In more exact terms, it's sensitive to inter- and intra-correlation of bits in t
 So Whippet shines best when the keys are just a sequential numbers, and is modest when the keys are strongly random, the difference reaching 5-6 times in speed and 1.5-1.7 times in used space. 
 
 The following pictures compare the typical insertion speed and used space of 3 implementations of `java.util.Map<Long,Long>` - the Whippet DB, the [Cronicle Map](https://github.com/OpenHFT/Chronicle-Map), and the `java.util.HashMap`.
-The implementations were run against the three sets of keys - serial, moderately random and strongly random.
+The implementations were run against the three sets of 50M keys - serial, moderately random and strongly random. The HashMap wasn't able to insert more then 33M keys, it just got stuck in garbage collection.
 
 Keys type | # of inserted keys vs time | Insertion speed vs time | Used space vs # of inserted keys
 ----------|----------|----------|----------
 Sequential | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-serial.png) | [image](https://samokhodkin.github.io/whippet-db/images/speed-keys-serial.png) | [image](https://samokhodkin.github.io/whippet-db/images/size-keys-serial.png)
 Moderately random | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-mod-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/speed-keys-mod-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/size-keys-mod-random.png)
 Strongly random | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/speed-keys-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/size-keys-random.png)
+
+The table below compares the speed and space for a workload consisting of 50M fresh inserts, followed by 50M reads, then 50M deletes, then 50M secondary inserts. 
+Whippet and Cronicle Map were compared against the three key sets described above. Both keys and values are 8-byte Longs.
+
+Keys type | Inserts | Reads | Deletes | Inserts | Average
+----------|----------|----------|----------
+Whippet, sequential keys | 5921364.0 op/sec, 38 bytes/key | 9626492.0 op/sec | 9044862.0 op/sec | 7257947.5 op/sec, 38 bytes/key | 7676069.5 op/sec
+Chronicle, sequential keys | 2606610.2 op/sec, 27 bytes/key total | 4689551.5 op/sec | 2506391.2 op/sec | 2713998.8 op/sec, 27 bytes/key total | 2931863.5 op/sec
+Whippet, moderately random keys | 2526528.5 op/sec, 42 bytes/key | 3243383.5 op/sec | 3118373.5 op/sec | 2169009.2 op/sec, 42 bytes/key |  2692079.8 op/sec
+Chronicle, moderately random keys | 2487562.2 op/sec, 27 bytes/key total | 4405674.5 op/sec | 2485830.8 op/sec | 2597267.5 op/sec, 27 bytes/key total | 2824300.2 op/sec
+Whippet, strongly random keys | 1768581.1 op/sec, 52 bytes/key | 2182096.0 op/sec | 2204707.0 op/sec | 1633853.5 op/sec, 52 bytes/key | 1914493.9 op/sec
+Chronicle, strongly random keys | 2469867.5 op/sec, 27 bytes/key | 4368338.0 op/sec | 2451340.8 op/sec | 2583445.2 op/sec , 27 bytes/key | 2799512.8 op/sec
 
 

@@ -18,8 +18,8 @@ public class LongLongDbPerf {
    static Random r = new Random();
    
    public static void main(String[] args) throws Exception {
-      //runWdb();
-      runHm();
+      runWdb();
+      //runHm();
    }
    
    @SuppressWarnings("unused")
@@ -30,7 +30,7 @@ public class LongLongDbPerf {
       
       DbBuilder<Long, Long> builder = new DbBuilder<>(new LongIO(), new LongIO());
       builder.synchronize(true);
-      builder.speedVsCapacity(0.4f);
+      builder.speedVsCapacity(0.6f);
       builder.create();
       //builder.create("tmp");
       System.out.println("builder="+builder);
@@ -175,11 +175,12 @@ public class LongLongDbPerf {
    static Long key(long i) {
 //      return i;
 //      return FastHash.hash64(i); // non-randomized keys
-      return FastHash.fnb64(i*FastHash.fnb64(i*i)); // moderately random keys
+//      return FastHash.fnb64(i*FastHash.fnb64(i*i)); // moderately random keys
 //      return FastHash.hash64(i^FastHash.hash64(i^FastHash.hash64(i^FastHash.hash64(i)))); // strongly random
-//    String s = "" + FastHash.hash64(i);
-//      keybuf.write(0, s);
-//      return FastHash.hash64(keybuf, 0, s.length()<<1);
+//      String s = "" + FastHash.hash64(i);
+      String s = "" + i;
+      keybuf.write(0, s);
+      return FastHash.hash64(keybuf, 0, s.length()<<1);
 //      return random.nextLong();
    }
    
