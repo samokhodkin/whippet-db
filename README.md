@@ -95,8 +95,8 @@ Sequential | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-s
 Moderately random | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-mod-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/speed-keys-mod-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/size-keys-mod-random.png)
 Strongly random | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/speed-keys-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/size-keys-random.png)
 
-The table below compares the speed and space for a workload consisting of 50M fresh inserts, followed by 50M reads, then 50M deletes, then 50M secondary inserts. 
-Whippet and Cronicle Map were compared against the three key sets described above. Both keys and values are 8-byte Longs.
+The table below shows the typical figures for a workload consisting of 50M fresh inserts, followed by 50M reads, then 50M deletes, then 50M secondary inserts, 
+against the three key sets described above. Both keys and values are 8-byte Longs. For comparison there are also figures for Cronicle Map.
 
 Keys type | Inserts, op/sec | Reads, op/sec | Deletes, op/sec | Inserts, op/sec | Average, op/sec
 ----------|----------|----------|----------|----------|----------
