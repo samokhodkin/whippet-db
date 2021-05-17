@@ -87,7 +87,7 @@ In more exact terms, it's sensitive to inter- and intra-correlation of bits in t
 So Whippet shines when the keys are sequential numbers, and is modest when the keys are strongly random, the difference reaching 5-6 times in speed and 1.5-1.7 times in used space. 
 
 The following pictures compare the typical insertion speed and used space of 3 implementations of `java.util.Map<Long,Long>` - the Whippet DB, the [Cronicle Map](https://github.com/OpenHFT/Chronicle-Map), and the `java.util.HashMap`.
-The implementations were run against the three sets of 50M keys - serial, moderately random and strongly random. The HashMap wasn't able to insert more then 33M keys, it just got stuck in garbage collection.
+The implementations were run against the three sets of 50M keys - serial, moderately random and strongly random. The HashMap was unable to insert more then 30-40M keys, it got stuck in garbage collection.
 
 Keys type | # of inserted keys vs time | Insertion speed vs time | Used space vs # of inserted keys
 ----------|----------|----------|----------
