@@ -14,7 +14,7 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 ## Features
 
-* **Performance.** In non-journaling mode its CRUD speed range reaches 5-7M op/sec for small objects, while in the journaling mode over an SSD the write speed is about 150-250K op/sec.
+* **Performance.** In non-journaling mode its CRUD speed range reaches 5-7M op/sec for small fixed-size objects, while in the journaling mode over an SSD the write speed is about 150-250K op/sec.
 
 * **Journaling mode** makes Whippet to keep the updates atomic, so the integrity of a database doesn't suffer from a sudden power outage. By default the updates are eventually durable. This means that in the case of an application failure all updates remain intact, while in the case of a system or hardware failure a number of the very recent updates may be lost. You may also opt for instant durability, at the cost of much lower speed.
 
@@ -57,21 +57,21 @@ import io.github.whippetdb.db.api.types.CharsIO;
 
 ...
 
-// in-memory Long:Long map
+// in-memory Long-Long map
 static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO()).create().asMap();
 
-// on-disk, synchronized Long:Long map
+// on-disk, synchronized Long-Long map
 static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO())
 	.synchronize(true)
 	.create("path/to/file").asMap();
 
-// journaling on-disk synchronized Long:Long map
+// journaling on-disk synchronized Long-Long map
 static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO())
 	.journaling(true)
 	.synchronize(true)
 	.create("path/to/file").asMap();
 
-// journaling on-disk synchronized CharSequence:CharSequence map;
+// journaling on-disk synchronized CharSequence-CharSequence map;
 // for better performance provide expected average key and value sizes
 static Map<CharSequence,CharSequence>  = new DbBuilder(new CharsIO(20,null), new CharsIO(50,null))
 	.journaling(true)
