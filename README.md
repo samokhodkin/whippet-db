@@ -73,7 +73,7 @@ static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO())
 
 // journaling on-disk synchronized CharSequence-CharSequence map;
 // for better performance provide expected average key and value sizes
-static Map<CharSequence,CharSequence>  = new DbBuilder(new CharsIO(20,null), new CharsIO(50,null))
+static Map<CharSequence,CharSequence>  = new DbBuilder(new CharsIO(10,null), new CharsIO(40,null))
 	.journaling(true)
 	.synchronize(true)
 	.create("path/to/file").asMap();
