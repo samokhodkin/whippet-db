@@ -62,6 +62,8 @@ The implementations were run against the three sets of keys - serial, moderately
 
 Keys type | # of inserted keys vs time | Insertion speed vs time | Used space vs # of inserted keys
 ----------|----------|----------|----------
-Sequential | 
+Sequential | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-serial.png) | [image](https://samokhodkin.github.io/whippet-db/images/speed-keys-serial.png) | [image](https://samokhodkin.github.io/whippet-db/images/size-keys-serial.png)
+Moderately random | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-mod-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/speed-keys-mod-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/size-keys-mod-random.png)
+Strongly random | [image](https://samokhodkin.github.io/whippet-db/images/keys-time-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/speed-keys-random.png) | [image](https://samokhodkin.github.io/whippet-db/images/size-keys-random.png)
 
 

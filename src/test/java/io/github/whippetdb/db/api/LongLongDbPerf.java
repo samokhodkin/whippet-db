@@ -11,21 +11,22 @@ import io.github.whippetdb.memory.api.MemDataBuffer;
 import io.github.whippetdb.memory.basic.SimpleDirectDataBuffer;
 import io.github.whippetdb.memory.db.MemMap;
 import io.github.whippetdb.memory.db.MemMap.Cursor;
+import io.github.whippetdb.util.FastHash;
 import io.github.whippetdb.util.Util;
 
 public class LongLongDbPerf {
    static Random r = new Random();
    
    public static void main(String[] args) throws Exception {
-      runWdb();
-      //runHm();
+      //runWdb();
+      runHm();
    }
    
    @SuppressWarnings("unused")
    static void runWdb() throws Exception {
       new File("tmp").mkdir();
       long t0, dt, total = 0;
-      long N = 40_000_000;
+      long N = 32_000_000;
       
       DbBuilder<Long, Long> builder = new DbBuilder<>(new LongIO(), new LongIO());
       builder.synchronize(true);
@@ -101,7 +102,7 @@ public class LongLongDbPerf {
 
    static void runHm() throws Exception {
       long t0, dt, total = 0;
-      long N = 50_000_000; //50_000_000;
+      long N = 40_000_000; //50_000_000;
       
       Map<Long,Long> map = new HashMap<>();
       Runtime runtime = Runtime.getRuntime();
@@ -116,8 +117,8 @@ public class LongLongDbPerf {
             System.out.println("collision: " + map.get(k) + ", " + k + " -> " + v);
          }
          // num keys, allocated, actually used, time
-         //long usedMemory = runtime.totalMemory()-runtime.freeMemory()-usedMemory0;
-         //if((i&0x1fffff)==0) System.out.printf("%16d  %16d  %16d  %16d\n", i, usedMemory, usedMemory, System.currentTimeMillis()-t0);
+         long usedMemory = runtime.totalMemory()-runtime.freeMemory()-usedMemory0;
+         if((i&0x1fffff)==0) System.out.printf("%16d  %16d  %16d  %16d\n", i, usedMemory, usedMemory, System.currentTimeMillis()-t0);
       }
       total += dt = System.currentTimeMillis() - t0;
       System.out.println((N*1000f/dt) + " op/sec");
@@ -172,9 +173,9 @@ public class LongLongDbPerf {
    static Random random = new Random();
    
    static Long key(long i) {
-      return i;
+//      return i;
 //      return FastHash.hash64(i); // non-randomized keys
-//      return FastHash.fnb64(i*FastHash.fnb64(i*i)); // moderately random keys
+      return FastHash.fnb64(i*FastHash.fnb64(i*i)); // moderately random keys
 //      return FastHash.hash64(i^FastHash.hash64(i^FastHash.hash64(i^FastHash.hash64(i)))); // strongly random
 //    String s = "" + FastHash.hash64(i);
 //      keybuf.write(0, s);
