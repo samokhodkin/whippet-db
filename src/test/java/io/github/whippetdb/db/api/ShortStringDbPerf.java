@@ -5,18 +5,11 @@ import java.util.Map;
 import io.github.whippetdb.db.api.DbBuilder;
 import io.github.whippetdb.db.api.types.CharsIO;
 import io.github.whippetdb.memory.db.VarMap;
+import io.github.whippetdb.util.FastHash;
 import io.github.whippetdb.util.Util;
 
+@SuppressWarnings("unused")
 public class ShortStringDbPerf {
-   static String key(long i) {
-      return "" + i;
-      //return "" + FastHash.hash64(i);
-   }
-   
-   static String value(long i) {
-      return "" + i;
-   }
-   
    public static void main(String[] args) throws Exception {
       DbBuilder<CharSequence, CharSequence> builder = new DbBuilder<>(new CharsIO(20,null), new CharsIO(10,null));
       long N = 10_000_000;
@@ -90,5 +83,14 @@ public class ShortStringDbPerf {
       System.out.println();
       
       System.out.println("write-read-delete-write mean: " + (4*N*1000f/total) + " op/sec");
+   }
+   
+   static String key(long i) {
+//      return "" + i;
+      return "" + FastHash.hash64(i^FastHash.hash64(i^FastHash.hash64(i^FastHash.hash64(i)))); // strongly random
+   }
+   
+   static String value(long i) {
+      return "" + i;
    }
 }

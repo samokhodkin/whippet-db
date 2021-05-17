@@ -9,7 +9,7 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 ## Applications
 
 * as a general data index or a cache
-* as a persistent and sometimes more capable drop-in replacement for a java.util.Map
+* as a drop-in replacement for a java.util.Map which is off-heap, persistent and sometimes faster
 * in journaling mode Whippet makes an ideal application configuration/properties store
 
 ## Features
@@ -26,6 +26,16 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 * **Thread safety** is currently implemented via an optional coarse-grained synchronization with one lock per whole database.
 
+## What Whippet DB is not
+
+* Not a distributed database. It may be used only inside a single process.
+
+* Not highly concurrent: its performance doesn't scale with more threads because of a single lock per database.
+
+* It doesn't provide response time guarantee, especially in journaling mode
+
+* It's doesn't save space. The average overhead is 20-25 bytes/key for fixed-size data, and 80-100 bytes/key for variable-size data. This will be improved in next releses, but not much.
+
 ## Setup
 
 Maven dependency
@@ -39,4 +49,19 @@ or [download the jar](https://github.com/samokhodkin/whippet-db/releases)
 See the [API doc](https://samokhodkin.github.io/whippet-db/api/)
 
 ## Code samples
+
+
+## Performance
+
+The important feature of Whipet, which may seem both as a problem and as a benefit, is that its performance is very sensitive to the randomness of the keys. 
+In more exact terms, it's sensitive to inter- and intra-correlation of bits in the keys. The more correlated are the keys, the better is performance, both in the terms of used space and speed. 
+So Whippet shines best when the keys are just a sequential numbers, and is modest when the keys are strongly random, the difference reaching 5-6 times in speed and 1.5-1.7 times in used space. 
+
+The following pictures compare the typical insertion speed and used space of 3 implementations of `java.util.Map<Long,Long>` - the Whippet DB, the [Cronicle Map](https://github.com/OpenHFT/Chronicle-Map), and the `java.util.HashMap`.
+The implementations were run against the three sets of keys - serial, moderately random and strongly random.
+
+Keys type | # of inserted keys vs time | Insertion speed vs time | Used space vs # of inserted keys
+----------|----------|----------|----------
+Sequential | 
+
 
