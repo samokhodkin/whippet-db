@@ -101,10 +101,10 @@ against the three key sets described above. Both keys and values are 8-byte Long
 Keys type | Inserts, op/sec | Reads, op/sec | Deletes, op/sec | Inserts, op/sec | Average, op/sec
 ----------|----------|----------|----------|----------|----------
 Whippet, sequential keys | 5,921,364 (38 bytes/key) | 9,626,492 | 9,044,862 | 7,257,947 (38 bytes/key) | 7,676,069
-Chronicle, sequential keys | 2,606,610 (27 bytes/key) | 4,689,551 | 2,506,391 | 2,713,998 (27 bytes/key) | 2,931,863
 Whippet, moderately random keys | 2,526,528 (42 bytes/key) | 3,243,383 | 3,118,373 | 2,169,009 (42 bytes/key) |  2,692,079
-Chronicle, moderately random keys | 2,487,562 (27 bytes/key) | 4,405,674 | 2,485,830 | 2,597,267 (27 bytes/key) | 2,824,300
 Whippet, strongly random keys | 1,768,581 (52 bytes/key) | 2,182,096 | 2,204,707 | 1,633,853 (52 bytes/key) | 1,914,493
+Chronicle, sequential keys | 2,606,610 (27 bytes/key) | 4,689,551 | 2,506,391 | 2,713,998 (27 bytes/key) | 2,931,863
+Chronicle, moderately random keys | 2,487,562 (27 bytes/key) | 4,405,674 | 2,485,830 | 2,597,267 (27 bytes/key) | 2,824,300
 Chronicle, strongly random keys | 2,469,867 (27 bytes/key) | 4,368,338 | 2,451,340 | 2,583,445 (27 bytes/key) | 2,799,512
 
 
