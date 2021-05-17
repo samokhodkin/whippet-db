@@ -84,7 +84,7 @@ static Map<CharSequence,CharSequence>  = new DbBuilder(new CharsIO(20,null), new
 
 The important feature of Whipet, which may seem both as a problem and as a benefit, is that its performance is very sensitive to the randomness of the keys. 
 In more exact terms, it's sensitive to inter- and intra-correlation of bits in the keys. The more correlated are the keys, the better is performance, both in the terms of used space and speed. 
-So Whippet shines best when the keys are just a sequential numbers, and is modest when the keys are strongly random, the difference reaching 5-6 times in speed and 1.5-1.7 times in used space. 
+So Whippet shines when the keys are just a sequential numbers, and is modest when the keys are strongly random, the difference reaching 5-6 times in speed and 1.5-1.7 times in used space. 
 
 The following pictures compare the typical insertion speed and used space of 3 implementations of `java.util.Map<Long,Long>` - the Whippet DB, the [Cronicle Map](https://github.com/OpenHFT/Chronicle-Map), and the `java.util.HashMap`.
 The implementations were run against the three sets of 50M keys - serial, moderately random and strongly random. The HashMap wasn't able to insert more then 33M keys, it just got stuck in garbage collection.
