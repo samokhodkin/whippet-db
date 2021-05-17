@@ -99,7 +99,7 @@ The table below compares the speed and space for a workload consisting of 50M fr
 Whippet and Cronicle Map were compared against the three key sets described above. Both keys and values are 8-byte Longs.
 
 Keys type | Inserts | Reads | Deletes | Inserts | Average
-----------|----------|----------|----------
+----------|----------|----------|----------|----------|----------
 Whippet, sequential keys | 5921364.0 op/sec, 38 bytes/key | 9626492.0 op/sec | 9044862.0 op/sec | 7257947.5 op/sec, 38 bytes/key | 7676069.5 op/sec
 Chronicle, sequential keys | 2606610.2 op/sec, 27 bytes/key total | 4689551.5 op/sec | 2506391.2 op/sec | 2713998.8 op/sec, 27 bytes/key total | 2931863.5 op/sec
 Whippet, moderately random keys | 2526528.5 op/sec, 42 bytes/key | 3243383.5 op/sec | 3118373.5 op/sec | 2169009.2 op/sec, 42 bytes/key |  2692079.8 op/sec
