@@ -1,12 +1,15 @@
-# Whippet-db
+Whippet-db
+==========
 
-An embedded key-value store for Java.
+Simple and fast embedded key-value database for Java.
 
-[#image-maven]
-[caption="", link=https://maven-badges.herokuapp.com/maven-central/io.github.samokhodkin/whippet-db]
-image::https://maven-badges.herokuapp.com/maven-central/io.github.samokhodkin/whippet-db/badge.svg[]
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.samokhodkin/whippet-db.svg)](https://mvnrepository.com/artifact/io.github.samokhodkin/whippet-db/latest)
+[![Javadoc](https://www.javadoc.io/badge/io.github.samokhodkin/whippet-db.svg)](https://www.javadoc.io/doc/io.github.samokhodkin/whippet-db)
 
-Whippet-db is a fast embedded local key-value store for Java, either in-memory or persistent - of your choice. The library is extremally low-footprint - less then 150 kb, with no dependencies, and is very simple to use. It is written in pure classic Java 1.8 with no use of Unsafe or native methods, so there are no problems with transition to newer Java versions.
+
+## Overview
+
+Whippet-db is a fast embedded local key-value store for Java, either in-memory or persistent - at your choice. The library is extremally low-footprint - less then 150 kb, with no dependencies, and is very simple to use. It is written in pure classic Java 1.8 with no use of Unsafe or native methods, so there are no problems with transition to newer Java versions.
 
 ## Applications
 
@@ -18,7 +21,7 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 * **Performance.** In non-journaling mode its CRUD speed range reaches 5-7M op/sec for small fixed-size objects, while in the journaling mode over an SSD the write speed is about 150-250K op/sec.
 
-* **Journaling mode** makes Whippet to keep the updates atomic, so the integrity of a database doesn't suffer from a sudden power outage. By default the updates are eventually durable. This means that in the case of an application failure all updates remain intact, while in the case of a system or hardware failure a number of the very recent updates may be lost. You may also opt for instant durability, at the cost of much lower speed.
+* **Journaling mode** makes Whippet to keep the updates atomic, so the integrity of a database doesn't suffer from a sudden system crash or power outage. By default the updates are eventually durable, which means that in the case of an application failure all updates remain intact, while in the case of a system or hardware failure a number of the very recent updates may be lost. You may also opt for instant durability, at the cost of much lower speed.
 
 * **No preallocation.** Used RAM of file space grows dynamically.
 
@@ -30,13 +33,13 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 ## What Whippet DB is not
 
-* Not a distributed database. It may be used only inside a single process.
+* Not a distributed database. It may be used only in a single process.
 
 * Not highly concurrent: its performance doesn't scale with more threads because of a single lock per database.
 
 * It doesn't provide response time guarantee, especially in journaling mode
 
-* It's doesn't save space. The average overhead is 20-25 bytes/key for fixed-size data, and 80-100 bytes/key for variable-size data. This will be improved in next releses, but not much.
+* It doesn't focus on saving space. The average overhead is 20-25 bytes/key for fixed-size data, and 80-100 bytes/key for variable-size data. This will be improved in next releses, but not much.
 
 ## Setup
 
