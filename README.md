@@ -4,8 +4,7 @@ An embedded key-value store for Java.
 
 [#image-maven]
 [caption="", link=https://maven-badges.herokuapp.com/maven-central/io.github.samokhodkin/whippet-db]
-
-## Overview
+image::https://maven-badges.herokuapp.com/maven-central/io.github.samokhodkin/whippet-db/badge.svg[]
 
 Whippet-db is a fast embedded local key-value store for Java, either in-memory or persistent - of your choice. The library is extremally low-footprint - less then 150 kb, with no dependencies, and is very simple to use. It is written in pure classic Java 1.8 with no use of Unsafe or native methods, so there are no problems with transition to newer Java versions.
 
