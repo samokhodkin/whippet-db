@@ -1,7 +1,7 @@
 Whippet-db
 ==========
 
-Simple and fast embedded key-value database for Java.
+Fast embedded key-value database engine for Java with a Map interface.
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.samokhodkin/whippet-db.svg)](https://mvnrepository.com/artifact/io.github.samokhodkin/whippet-db/latest)
 [![Javadoc](https://www.javadoc.io/badge/io.github.samokhodkin/whippet-db.svg)](https://www.javadoc.io/doc/io.github.samokhodkin/whippet-db)
