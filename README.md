@@ -67,22 +67,22 @@ import io.github.whippetdb.db.api.types.CharsIO;
 ...
 
 // in-memory Long-Long map
-static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO()).create().asMap();
+static Map<Long,Long> inMemoryMap = new DbBuilder(new LongIO(), new LongIO()).create().asMap();
 
 // on-disk, synchronized Long-Long map
-static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO())
+static Map<Long,Long> onDiskSyncMap = new DbBuilder(new LongIO(), new LongIO())
 	.synchronize(true)
 	.create("path/to/file").asMap();
 
 // journaling on-disk synchronized Long-Long map
-static Map<Long,Long>  = new DbBuilder(new LongIO(), new LongIO())
+static Map<Long,Long> journalingSynchronizedLongLongMap = new DbBuilder(new LongIO(), new LongIO())
 	.journaling(true)
 	.synchronize(true)
 	.create("path/to/file").asMap();
 
 // journaling on-disk synchronized CharSequence-CharSequence map;
 // for better performance provide expected average key and value sizes
-static Map<CharSequence,CharSequence>  = new DbBuilder(new CharsIO(10,null), new CharsIO(40,null))
+static Map<CharSequence,CharSequence> journalingSynchronizedStrStrMap = new DbBuilder(new CharsIO(10,null), new CharsIO(40,null))
 	.journaling(true)
 	.synchronize(true)
 	.create("path/to/file").asMap();
