@@ -70,7 +70,7 @@ import io.github.whippetdb.db.api.types.CharsIO;
 static Map<Long,Long> inMemoryMap = new DbBuilder(new LongIO(), new LongIO()).create().asMap();
 
 // on-disk, synchronized Long-Long map
-static Map<Long,Long> onDiskSyncMap = new DbBuilder(new LongIO(), new LongIO())
+static Map<Long,Long> onDiskSynchronizedMap = new DbBuilder(new LongIO(), new LongIO())
 	.synchronize(true)
 	.create("path/to/file").asMap();
 
