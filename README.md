@@ -39,7 +39,7 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 * It doesn't provide response time guarantee, especially in journaling mode
 
-* It doesn't focus on saving space. The average overhead is 20-25 bytes/key for fixed-size data, and 80-100 bytes/key for variable-size data. This will be improved in next releses, but not much.
+* It doesn't focus on space efficiency. The average overhead is 20-25 bytes/key for fixed-size data, and 80-100 bytes/key for variable-size data. This will be improved in next releses, but not much.
 
 ## Setup
 
