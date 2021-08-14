@@ -112,6 +112,7 @@ public class FixedDbUtil extends DbUtil {
             db.scan(() -> {
                return handler.run(db.key, db.value, delete);
             });
+            // scan handler might have changed the data
             if(autocommit) commit.run();
             if(autoflush) flush.run();
          }

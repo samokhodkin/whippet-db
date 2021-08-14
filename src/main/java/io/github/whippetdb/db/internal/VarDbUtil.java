@@ -105,7 +105,7 @@ public class VarDbUtil extends DbUtil {
          }
          public <T> T seek(MemIO key, long keyOff, int keyLen, SeekHandler<T> handler) {
             T t = db.seek(key, keyOff, keyLen)? handler.run(db.value, delete): handler.run(null, null);
-            if(autocommit) discard.run();
+            if(autocommit) commit.run();
             return t;
          }
          public <T> T put(MemIO key, long keyOff, int keyLen, PutHandler<T> handler) {

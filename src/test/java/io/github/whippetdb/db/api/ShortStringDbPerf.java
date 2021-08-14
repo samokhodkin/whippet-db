@@ -8,7 +8,6 @@ import io.github.whippetdb.memory.db.VarMap;
 import io.github.whippetdb.util.FastHash;
 import io.github.whippetdb.util.Util;
 
-@SuppressWarnings("unused")
 public class ShortStringDbPerf {
    public static void main(String[] args) throws Exception {
       DbBuilder<CharSequence, CharSequence> builder = new DbBuilder<>(new CharsIO(20,null), new CharsIO(10,null));

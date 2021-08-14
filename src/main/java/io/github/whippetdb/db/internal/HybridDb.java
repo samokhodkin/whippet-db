@@ -34,6 +34,7 @@ public class HybridDb implements Db {
    private final HybridKeyWrapper keyBuf = new HybridKeyWrapper();
    private final HybridValue valueBuf = new HybridValue();
    
+   // Both key and value of the parent must be fixed-size
    public HybridDb(Db parent, boolean hybridKey, boolean hybridValue) {
       this.parent = parent;
       this.hybridKey = hybridKey;
@@ -62,18 +63,18 @@ public class HybridDb implements Db {
 
    public <T> T seek(MemIO key, long keyOff, int keyLen, SeekHandler<T> handler) {
       return hybridKey?
-            parent.seek(key(key, keyOff, keyLen), modify(handler)) :
+            parent.seek(hKey(key, keyOff, keyLen), modify(handler)) :
             parent.seek(key, keyOff, keyLen, modify(handler));
    }
 
    public <T> T put(MemIO key, long keyOff, int keyLen, PutHandler<T> handler) {
       return hybridKey?
-            parent.put(key(key, keyOff, keyLen), modify(handler)) :
+            parent.put(hKey(key, keyOff, keyLen), modify(handler)) :
             parent.put(key, keyOff, keyLen, modify(handler));
    }
 
    public void scan(ScanHandler handler) {
-      HybridValue hkey = new HybridValue();
+      HybridValue hkey = new HybridKey();
       HybridValue hval = new HybridValue();
       parent.scan((key, value, delete) -> {
          hkey.setParent(key, keySize);
@@ -104,19 +105,19 @@ public class HybridDb implements Db {
    }
 
    private <T> SeekHandler<T> modify(SeekHandler<T> handler) {
-      return hybridValue? (data, delete) -> handler.run(value(data, false), delete) : handler;
+      return hybridValue? (data, delete) -> handler.run(hValue(data, false), delete) : handler;
    }
    
    private <T> PutHandler<T> modify(PutHandler<T> handler) {
-      return hybridValue? (created, data, delete) -> handler.run(created, value(data, created), delete) : handler;
+      return hybridValue? (created, data, delete) -> handler.run(created, hValue(data, created), delete) : handler;
    }
    
-   private MemArray key(MemIO key, long keyOff, int keyLen) {
+   private MemArray hKey(MemIO key, long keyOff, int keyLen) {
       keyBuf.setData(keySize, key, keyOff, keyLen);
       return keyBuf;
    }
    
-   private MemDataArray value(MemDataArray data, boolean reset) {
+   private MemDataArray hValue(MemDataArray data, boolean reset) {
       if(data == null) return null;
       valueBuf.setParent(data, valueSize);
       if(reset) valueBuf.setSize(0);
@@ -146,6 +147,13 @@ public class HybridDb implements Db {
       protected void checkWrite(long addr, int len) {
          Util.checkAppend(addr, cachedSize);
          if(addr + len > cachedSize) setSize(addr + len);
+      }
+   }
+   
+   static class HybridKey extends HybridValue {
+      @Override
+      protected void checkWrite(long addr, int len) {
+         throw new UnsupportedOperationException();
       }
    }
 }
