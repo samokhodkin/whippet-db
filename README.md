@@ -51,7 +51,7 @@ Maven dependency
   <version>1.0.1</version>
 </dependency>
 ````
-or [download the jar](https://github.com/samokhodkin/whippet-db/releases)
+or [download the jar](https://github.com/samokhodkin/whippet-db/releases/download/1.0.1/whippet-db-1.0.1.jar)
 
 ## Documentation
 
