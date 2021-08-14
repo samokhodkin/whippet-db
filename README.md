@@ -48,7 +48,7 @@ Maven dependency
 <dependency>
   <groupId>io.github.samokhodkin</groupId>
   <artifactId>whippet-db</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ````
 or [download the jar](https://github.com/samokhodkin/whippet-db/releases)
