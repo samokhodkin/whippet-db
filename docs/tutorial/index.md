@@ -118,8 +118,8 @@ by calling `DbBuilder::synchronize(boolean)` during a configuration step. This i
 ### Transactions
 
 Whippet-db does support transactions, but only in the journaling mode. Unlike conventional RDBMSs, where transactions are atomic and durable, in whippet-db transactions by default are atomic and eventually durable.
-The latter means that in the case of OS failure a number of last transactions may be lost. Note that in the event of process crash, while the OS remains intact, the last transactions remain safe as well. Typically,
-it takes a matter of several seconds for a transaction to become durable. If the eventual durability is unsufficient for the task, whippet-bd may also provide the instant durability at the cost of much lower performance. 
+The latter means that in the case of OS failure a number of last transactions may be lost. Note that in the event of process crash, while the OS remains intact, the last transactions remain safe as well. 
+Typically, it takes a matter of several seconds for a transaction to become durable. If the eventual durability is unsufficient for the task, whippet-db may also provide the instant durability at the cost of much lower performance. 
 
 Transactions may be automatic, where each insert/update/delete is automatically commited, or manual, where 
 you define transaction boundaries by calling appropriate methods.
