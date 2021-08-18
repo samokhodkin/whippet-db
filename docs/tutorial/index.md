@@ -32,7 +32,7 @@ map.put(1, "Hello");
 map.put(2, "World");
 ````
 
-So, the typical steps are the following:
+The typical steps are the following:
 
  - import the `io.github.whippetdb.db.api` and `io.github.whippetdb.db.api.*` packages
 
