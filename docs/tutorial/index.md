@@ -86,9 +86,8 @@ Whippet-db has three modes of operation:
   Yet there are still a number of ways for the database to become corrupt.
 
 - journaling mode: the transactions are written first to the write-ahead log, then sent to the main file,
-  in a such way as to ensure the atomicity and integrity of the changes. In the case of a sudden program
-  termination or a system failure, the next time the database is opened the journal is checked and applied 
-  to the main file. In this mode the database file always remain consistent.
+  in a such way as to ensure the atomicity and integrity of the changes. The journal takes care of keeping the
+  database file always consistent.
   
 The file-backed and journaling modes are mutually compatible, that is, once a db was created in one mode, it may be later opened in another. This is because the main file format is the same.
 
