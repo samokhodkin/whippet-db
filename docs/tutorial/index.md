@@ -1,7 +1,7 @@
 Introduction to whippet-db
 ==========================
 
-# How to include whippet-db to a project
+## How to include whippet-db to a project
 
 For maven projects add the dependency:
 ````
