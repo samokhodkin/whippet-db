@@ -52,6 +52,8 @@ or [download the latest whippet-db-x.x.x jar](https://github.com/samokhodkin/whi
 
 [Brief tutorial with examples](https://github.com/samokhodkin/whippet-db/blob/main/docs/tutorial/index.md)
 
+[Demo project](https://github.com/samokhodkin/whippet-db-demo)
+
 The latest javadoc: [![Javadoc](https://www.javadoc.io/badge/io.github.samokhodkin/whippet-db.svg)](https://www.javadoc.io/doc/io.github.samokhodkin/whippet-db)
 
 
