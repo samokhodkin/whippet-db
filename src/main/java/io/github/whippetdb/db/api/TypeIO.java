@@ -5,7 +5,9 @@ import io.github.whippetdb.memory.api.MemDataArray;
 import io.github.whippetdb.memory.api.MemDataBuffer;
 
 /**
- * Serialize/deserialize objects
+ * Serialize/deserialize objects.
+ * When implemeting, be careful with size(), maxSize(), avgSize(),
+ * they should be correct and consistent, otherwise the db engine may fail.
  */
 public interface TypeIO<T> {
    
@@ -19,12 +21,13 @@ public interface TypeIO<T> {
    }
    
    /**
-    * Convert object to memory.
+    * Convert an object to bytes in memory.
+    * This is specifically intended converting db keys, so the returned memory chunck 
+    * will be used only for reading.
     * Implementation may choose between creating new instance of memory
-    * and writing to existing buffer, which one is faster.
-    * This is intended for representing a db key as memory chunk.
-    * If the type is variable-size (size() returns null), the 
-    * size should be set through casting tmpBuf as MemDataBuffer.
+    * or writing to the supplied buffer, which one is faster.
+    * If the current type is variable-size (that is, size() returns null), the size of 
+    * the returned memory chunk should be set through casting tmpBuf as MemDataBuffer.
     * 
     * @param obj the object to convert.
     * @param tmpBuf the buffer that may be written to and returned as the result.
@@ -49,15 +52,23 @@ public interface TypeIO<T> {
     */
    public T readObject(MemDataArray buf);
    
-   // type has fixed size in memory
+   /**
+    * @return If the type is fixed-size, return the size, otherwise return null. 
+    */
    default Integer size() {
       return null;
    }
    
+   /**
+    * @return max size in bytes, if known, or null; if the type is fixed-size, return the size.
+    */
    default Integer maxSize() {
       return size();
    }
    
+   /**
+    * @return average size in bytes, if known, or null; if the type is fixed-size, return the size. 
+    */
    default Integer avgSize() {
       return size();
    }

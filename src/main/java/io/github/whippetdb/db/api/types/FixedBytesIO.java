@@ -5,11 +5,20 @@ import io.github.whippetdb.memory.api.MemArray;
 import io.github.whippetdb.memory.api.MemDataArray;
 import io.github.whippetdb.memory.basic.SimpleHeapDataBuffer;
 
+/**
+ * Fixed-length byte array.
+ */
+
 public class FixedBytesIO implements TypeIO<byte[]> {
    private final int size;
    
    public FixedBytesIO (int size) {
       this.size = size;
+   }
+   
+   @Override
+   public Integer size() {
+      return size;
    }
    
    @Override

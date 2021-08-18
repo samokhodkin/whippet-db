@@ -5,6 +5,10 @@ import io.github.whippetdb.memory.api.MemArray;
 import io.github.whippetdb.memory.api.MemDataArray;
 import io.github.whippetdb.memory.basic.SimpleHeapDataBuffer;
 
+/**
+ * Variable-length byte array
+ */
+
 public class BytesIO implements TypeIO<byte[]> {
    private final Integer avg, max;
    
