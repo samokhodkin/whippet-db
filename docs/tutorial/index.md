@@ -8,7 +8,7 @@ For maven projects add the dependency:
 <dependency>
   <groupId>io.github.samokhodkin</groupId>
   <artifactId>whippet-db</artifactId>
-  <version>1.0.1</version>
+  <version>x.x.x</version>
 </dependency>
 ````
 The latest version number can be found [here](https://search.maven.org/artifact/io.github.samokhodkin/whippet-db) 
