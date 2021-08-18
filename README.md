@@ -3,7 +3,7 @@ Whippet-db
 
 Fast embedded key-value database engine for Java with a Map interface.
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.samokhodkin/whippet-db.svg)](https://search.maven.org/artifact/io.github.samokhodkin/whippet-db/1.0.0/jar)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.samokhodkin/whippet-db.svg)](https://mvnrepository.com/artifact/io.github.samokhodkin/whippet-db/latest)
 [![Javadoc](https://www.javadoc.io/badge/io.github.samokhodkin/whippet-db.svg)](https://www.javadoc.io/doc/io.github.samokhodkin/whippet-db)
 
 
@@ -48,10 +48,10 @@ Maven dependency
 <dependency>
   <groupId>io.github.samokhodkin</groupId>
   <artifactId>whippet-db</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ````
-or [download the jar](https://github.com/samokhodkin/whippet-db/releases)
+or [download the jar](https://github.com/samokhodkin/whippet-db/releases/download/1.0.1/whippet-db-1.0.1.jar)
 
 ## Documentation
 
