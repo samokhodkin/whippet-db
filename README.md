@@ -43,51 +43,17 @@ Whippet-db is a fast embedded local key-value store for Java, either in-memory o
 
 ## Setup
 
-Maven dependency
-````
-<dependency>
-  <groupId>io.github.samokhodkin</groupId>
-  <artifactId>whippet-db</artifactId>
-  <version>1.0.1</version>
-</dependency>
-````
-or [download the jar](https://github.com/samokhodkin/whippet-db/releases/download/1.0.1/whippet-db-1.0.1.jar)
+Add latest Maven dependency:
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.samokhodkin/whippet-db.svg)](https://mvnrepository.com/artifact/io.github.samokhodkin/whippet-db/latest)
+
+or [download the latest whippet-db-x.x.x jar](https://github.com/samokhodkin/whippet-db/releases)
 
 ## Documentation
 
-See the [API doc](https://samokhodkin.github.io/whippet-db/api/)
+[Brief tutorial with examples](https://github.com/samokhodkin/whippet-db/blob/main/docs/tutorial/index.md)
 
-## Code samples
+The latest javadoc: [![Javadoc](https://www.javadoc.io/badge/io.github.samokhodkin/whippet-db.svg)](https://www.javadoc.io/doc/io.github.samokhodkin/whippet-db)
 
-````
-import io.github.whippetdb.db.api.DbBuilder;
-import io.github.whippetdb.db.api.types.LongIO;
-import io.github.whippetdb.db.api.types.CharsIO;
-
-...
-
-// in-memory Long-Long map
-static Map<Long,Long> inMemoryMap = new DbBuilder(new LongIO(), new LongIO()).create().asMap();
-
-// on-disk, synchronized Long-Long map
-static Map<Long,Long> onDiskSynchronizedMap = new DbBuilder(new LongIO(), new LongIO())
-	.synchronize(true)
-	.create("path/to/file").asMap();
-
-// journaling on-disk synchronized Long-Long map
-static Map<Long,Long> journalingSynchronizedLongLongMap = new DbBuilder(new LongIO(), new LongIO())
-	.journaling(true)
-	.synchronize(true)
-	.create("path/to/file").asMap();
-
-// journaling on-disk synchronized CharSequence-CharSequence map;
-// for better performance provide expected average key and value sizes
-static Map<CharSequence,CharSequence> journalingSynchronizedStrStrMap = new DbBuilder(new CharsIO(10,null), new CharsIO(40,null))
-	.journaling(true)
-	.synchronize(true)
-	.create("path/to/file").asMap();
-
-````
 
 ## Performance
 
