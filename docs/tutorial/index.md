@@ -62,7 +62,7 @@ A number of ready-made converters exists in the package `io.github.whippetdb.db.
 If you need a converter that is missing from the `types` package, you should implement it on yourself,
 using the existing converters as examples and/or superclasses.
 
-Two converters are supplied as arguments to the builder's constructor `io.github.whippetdb.db.api.DbBuilder(TypeIO, TypeIO)`. The first argument is for keys and the second one is for values. The converters also define the generic type for the builder and subsequently for the map.
+The two converters are supplied as arguments to the builder's constructor `io.github.whippetdb.db.api.DbBuilder(TypeIO, TypeIO)`. The first argument is for keys and the second one is for values. The converters also define the generic type for the builder and subsequently for the map.
 The `Map` reference can be obtained via `DbBuilder::asMap()` after the database was created or opened (see the next section).
 
 ````
