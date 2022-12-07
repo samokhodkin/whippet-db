@@ -43,6 +43,7 @@ public class BytesIO implements TypeIO<byte[]> {
    @Override
    public void writeObject(byte[] obj, MemDataArray buf) {
       buf.write(0, obj, 0, obj.length);
+      setSize(buf, obj.length);
    }
 
    @Override
